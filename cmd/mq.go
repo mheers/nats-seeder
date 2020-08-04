@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/mheers/nats-seeder/helpers"
 	"github.com/spf13/cobra"
@@ -39,8 +40,8 @@ var (
 			if err != nil {
 				return err
 			}
-			cmd.Printf("OPERATOR_SEED=\"" + string(operatorSeed) + "\"\n")
-			cmd.Printf("ACCOUNT_SEED=\"" + string(accountSeed) + "\"\n")
+			fmt.Printf("OPERATOR_SEED=\"" + string(operatorSeed) + "\"\n")
+			fmt.Printf("ACCOUNT_SEED=\"" + string(accountSeed) + "\"\n")
 			return nil
 		},
 	}
@@ -57,7 +58,7 @@ var (
 			if err != nil {
 				return err
 			}
-			cmd.Printf("%s", operatorJWT)
+			fmt.Printf("%s", operatorJWT)
 			return nil
 		},
 	}
@@ -81,7 +82,7 @@ var (
 			if err != nil {
 				return err
 			}
-			cmd.Printf("%s", accountJWT)
+			fmt.Printf("%s", accountJWT)
 			return nil
 		},
 	}
