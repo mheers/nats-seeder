@@ -1,2 +1,3 @@
 # nats-seeder
-Creates seeds for nats operators and accounts
+
+> Creates seeds for nats operators and accounts

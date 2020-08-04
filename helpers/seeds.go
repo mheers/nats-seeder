@@ -5,26 +5,27 @@ import (
 	"github.com/nats-io/nkeys"
 )
 
+// Create creates an operator, an account and the key pairs for them
 func Create() (nkeys.KeyPair, nkeys.KeyPair, error) {
 	oSeed, err := createOperatorSeed()
 	if err != nil {
 		return nil, nil, err
 	}
-	operator, _, err := createOperator(oSeed)
+	operator, _, err := CreateOperator(oSeed)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	aSeed, err := createAccountSeed()
-	account, _, err := createAccount(aSeed, operator)
+	account, _, err := CreateAccount(aSeed, operator)
 	if err != nil {
 		return nil, nil, err
 	}
 	return operator, account, nil
 }
 
-// createOperator creates an operator based on oSeed
-func createOperator(oSeed []byte) (nkeys.KeyPair, string, error) {
+// CreateOperator creates an operator based on oSeed
+func CreateOperator(oSeed []byte) (nkeys.KeyPair, string, error) {
 
 	okp, err := nkeys.FromSeed(oSeed)
 	if err != nil {
@@ -61,8 +62,8 @@ func createOperatorSeed() ([]byte, error) {
 	return oseed, nil
 }
 
-// createAccount creates an account based on aSeed and the operator; returns the account, the jwt for the account and optional an error
-func createAccount(aSeed []byte, okp nkeys.KeyPair) (nkeys.KeyPair, string, error) {
+// CreateAccount creates an account based on aSeed and the operator; returns the account, the jwt for the account and optional an error
+func CreateAccount(aSeed []byte, okp nkeys.KeyPair) (nkeys.KeyPair, string, error) {
 	akp, err := nkeys.FromSeed(aSeed)
 	if err != nil {
 		return nil, "", err
@@ -99,11 +100,11 @@ func createAccountSeed() ([]byte, error) {
 
 // GetAccount reconstructs an account (KeyPair) from the operator and account seeds
 func GetAccount(oSeed, aSeed []byte) (nkeys.KeyPair, error) {
-	operator, _, err := createOperator(oSeed)
+	operator, _, err := CreateOperator(oSeed)
 	if err != nil {
 		return nil, err
 	}
-	account, _, err := createAccount(aSeed, operator)
+	account, _, err := CreateAccount(aSeed, operator)
 	if err != nil {
 		return nil, err
 	}
