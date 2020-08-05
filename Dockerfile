@@ -17,4 +17,4 @@ FROM alpine:3.12
 WORKDIR /app
 COPY --from=builder /go/src/app/goapp /usr/local/bin/nats-seeder
 ENTRYPOINT ["/usr/local/bin/nats-seeder"]
-CMD ["mq"]
+CMD ["help"]

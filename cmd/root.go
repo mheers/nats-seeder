@@ -24,6 +24,5 @@ func Execute() error {
 }
 
 func init() {
-	rootCmd.AddCommand(mqCmd)
 	rootCmd.AddCommand(versionCmd)
 }

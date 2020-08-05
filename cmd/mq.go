@@ -13,15 +13,8 @@ var (
 	OperatorSeedFlag string
 	// AccountSeedFlag used for setting the account seed
 	AccountSeedFlag string
-
-	mqCmd = &cobra.Command{
-		Use:   "mq",
-		Short: "manages the mq",
-		Long:  ``,
-		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Help()
-		},
-	}
+	// SeedFlag used for setting a seed
+	SeedFlag string
 
 	mqCreateSeedsCmd = &cobra.Command{
 		Use:   "seeds",
@@ -86,12 +79,63 @@ var (
 			return nil
 		},
 	}
+
+	mqOperatorPublicKeyCmd = &cobra.Command{
+		Use:   "operator-public-key",
+		Short: "calculates the public-key for an operator",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			operatorKP, _, err := helpers.CreateOperator([]byte(OperatorSeedFlag))
+			if err != nil {
+				return err
+			}
+			publicKey, err := operatorKP.PublicKey()
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", publicKey)
+			return nil
+		},
+	}
+
+	mqAccountPublicKeyCmd = &cobra.Command{
+		Use:   "account-public-key",
+		Short: "calculates the public-key for an account",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			operatorKP, _, err := helpers.CreateOperator([]byte(OperatorSeedFlag))
+			if err != nil {
+				return err
+			}
+			if AccountSeedFlag == "" {
+				return errors.New("no value for parameter --account-seed found")
+			}
+			accountKP, _, err := helpers.CreateAccount([]byte(AccountSeedFlag), operatorKP)
+			if err != nil {
+				return err
+			}
+			publicKey, err := accountKP.PublicKey()
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", publicKey)
+			return nil
+		},
+	}
 )
 
 func init() {
-	mqCmd.PersistentFlags().StringVarP(&OperatorSeedFlag, "operator-seed", "o", "", "seed for the operator")
-	mqCmd.PersistentFlags().StringVarP(&AccountSeedFlag, "account-seed", "a", "", "seed for the account")
-	mqCmd.AddCommand(mqCreateSeedsCmd)
-	mqCmd.AddCommand(mqCreateOperatorJWTCmd)
-	mqCmd.AddCommand(mqCreateAccountJWTCmd)
+	rootCmd.PersistentFlags().StringVarP(&OperatorSeedFlag, "operator-seed", "o", "", "seed for the operator")
+	rootCmd.PersistentFlags().StringVarP(&AccountSeedFlag, "account-seed", "a", "", "seed for the account")
+	rootCmd.AddCommand(mqCreateSeedsCmd)
+	rootCmd.AddCommand(mqCreateOperatorJWTCmd)
+	rootCmd.AddCommand(mqCreateAccountJWTCmd)
+	rootCmd.AddCommand(mqOperatorPublicKeyCmd)
+	rootCmd.AddCommand(mqAccountPublicKeyCmd)
 }
