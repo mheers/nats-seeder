@@ -3,6 +3,7 @@ package helpers
 import (
 	"github.com/nats-io/jwt"
 	"github.com/nats-io/nkeys"
+	"github.com/sirupsen/logrus"
 )
 
 // Create creates an operator, an account and the key pairs for them
@@ -98,6 +99,21 @@ func createAccountSeed() ([]byte, error) {
 	return aseed, nil
 }
 
+// createUserSeed creates a seed for a user
+func createUserSeed() ([]byte, error) {
+	// Create a user
+	// Needed to create a new seed -> run this once and set the output to OSeed to have the same seed every time
+	akp, err := nkeys.CreateUser()
+	if err != nil {
+		return nil, err
+	}
+	useed, err := akp.Seed()
+	if err != nil {
+		return nil, err
+	}
+	return useed, nil
+}
+
 // GetAccount reconstructs an account (KeyPair) from the operator and account seeds
 func GetAccount(oSeed, aSeed []byte) (nkeys.KeyPair, error) {
 	operator, _, err := CreateOperator(oSeed)
@@ -109,4 +125,41 @@ func GetAccount(oSeed, aSeed []byte) (nkeys.KeyPair, error) {
 		return nil, err
 	}
 	return account, nil
+}
+
+// CreateUser creates a new user with specific permissions
+func CreateUser(oSeed, aSeed []byte, name string, allowPub, allowSub []string) (string, string, error) {
+	operator, _, err := CreateOperator(oSeed)
+	if err != nil {
+		return "", "", err
+	}
+	account, _, err := CreateAccount(aSeed, operator)
+	ukp, err := nkeys.CreateUser()
+	if err != nil {
+		return "", "", err
+	}
+	uSeed, err := ukp.Seed()
+	if err != nil {
+		return "", "", err
+	}
+	pub, err := ukp.PublicKey()
+	if err != nil {
+		return "", "", err
+	}
+	nuc := jwt.NewUserClaims(pub)
+	nuc.Subject = pub
+	nuc.BearerToken = true
+	nuc.Name = name
+
+	nuc.Pub.Allow = allowPub
+	nuc.Sub.Allow = allowSub
+
+	jwt, err := nuc.Encode(account)
+	if err != nil {
+		return "", "", err
+	}
+	logrus.Debugf("created a user jwt: %s\n", jwt)
+	logrus.Debugf("created a user uSeed: %s\n", uSeed)
+
+	return jwt, string(uSeed), err
 }

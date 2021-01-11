@@ -68,3 +68,27 @@ func TestNkeys(t *testing.T) {
 	assert.Equal(t, pubkSrc, pubkDest)
 	assert.Equal(t, jwtSrc, jwtDest)
 }
+
+func TestCreateUser(t *testing.T) {
+	operator, account, err := Create()
+	assert.Nil(t, err)
+	assert.NotNil(t, operator)
+	assert.NotNil(t, account)
+
+	oSeed, err := operator.Seed()
+	assert.NotNil(t, oSeed)
+	assert.Nil(t, err)
+	aSeed, err := account.Seed()
+	assert.Nil(t, err)
+	assert.NotNil(t, aSeed)
+
+	accountGot, err := GetAccount(oSeed, aSeed)
+	assert.Nil(t, err)
+	assert.NotNil(t, aSeed)
+	assert.Equal(t, account, accountGot)
+
+	jwt, uSeed, err := CreateUser(oSeed, aSeed, "demo", []string{}, []string{})
+	assert.Nil(t, err)
+	assert.NotNil(t, uSeed)
+	assert.NotEmpty(t, jwt)
+}

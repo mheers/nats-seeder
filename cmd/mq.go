@@ -16,6 +16,13 @@ var (
 	// SeedFlag used for setting a seed
 	SeedFlag string
 
+	// UserNameFlag used for the username
+	UserNameFlag string
+	// AllowPubFlag used to define channels the user will be allowed to publish
+	AllowPubFlag []string
+	// AllowSubFlag used to define channels the user will be allowed to subscribe
+	AllowSubFlag []string
+
 	mqCreateSeedsCmd = &cobra.Command{
 		Use:   "seeds",
 		Short: "creates seeds for the mq that can be directly added to the .env file",
@@ -80,6 +87,35 @@ var (
 		},
 	}
 
+	mqCreateUserJWTCmd = &cobra.Command{
+		Use:   "user-jwt",
+		Short: "creates a jwt for a user",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			if AccountSeedFlag == "" {
+				return errors.New("no value for parameter --account-seed found")
+			}
+			name := UserNameFlag
+			allowPub := AllowPubFlag
+			allowSub := AllowSubFlag
+			userJWT, uSeed, err := helpers.CreateUser([]byte(OperatorSeedFlag), []byte(AccountSeedFlag), name, allowPub, allowSub)
+			if err != nil {
+				return err
+			}
+			fmt.Println("-----BEGIN NATS USER JWT-----")
+			fmt.Printf("%s\n", userJWT)
+			fmt.Println("-----END NATS USER JWT-----")
+			fmt.Println("")
+			fmt.Println("-----BEGIN USER NKEY SEED-----")
+			fmt.Printf("%s\n", uSeed)
+			fmt.Println("-----END USER NKEY SEED-----")
+			return nil
+		},
+	}
+
 	mqOperatorPublicKeyCmd = &cobra.Command{
 		Use:   "operator-public-key",
 		Short: "calculates the public-key for an operator",
@@ -136,6 +172,12 @@ func init() {
 	rootCmd.AddCommand(mqCreateSeedsCmd)
 	rootCmd.AddCommand(mqCreateOperatorJWTCmd)
 	rootCmd.AddCommand(mqCreateAccountJWTCmd)
+
+	// mqCreateUserJWTCmd.PersistentFlags().StringArrayP()
+	mqCreateUserJWTCmd.PersistentFlags().StringVarP(&UserNameFlag, "user-name", "u", "", "name for the user")
+	mqCreateUserJWTCmd.PersistentFlags().StringArrayVarP(&AllowPubFlag, "allow-pub", "p", []string{}, "channels the user will be allowed to publish")
+	mqCreateUserJWTCmd.PersistentFlags().StringArrayVarP(&AllowSubFlag, "allow-sub", "s", []string{}, "channels the user will be allowed to subscribe")
+	rootCmd.AddCommand(mqCreateUserJWTCmd)
 	rootCmd.AddCommand(mqOperatorPublicKeyCmd)
 	rootCmd.AddCommand(mqAccountPublicKeyCmd)
 }
