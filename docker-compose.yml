@@ -1,0 +1,5 @@
+# prettier-ignore
+version: '2.0'
+services:
+  test:
+    image: mheers/nats-seeder

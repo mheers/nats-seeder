@@ -87,9 +87,9 @@ var (
 		},
 	}
 
-	mqCreateUserJWTCmd = &cobra.Command{
-		Use:   "user-jwt",
-		Short: "creates a jwt for a user",
+	mqCreateUserNkeyCmd = &cobra.Command{
+		Use:   "user-nkey",
+		Short: "creates a nkey for a user",
 		Long:  ``,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if OperatorSeedFlag == "" {
@@ -112,6 +112,29 @@ var (
 			fmt.Println("-----BEGIN USER NKEY SEED-----")
 			fmt.Printf("%s\n", uSeed)
 			fmt.Println("-----END USER NKEY SEED-----")
+			return nil
+		},
+	}
+
+	mqCreateUserJWTCmd = &cobra.Command{
+		Use:   "user-jwt",
+		Short: "creates a jwt for a user",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			if AccountSeedFlag == "" {
+				return errors.New("no value for parameter --account-seed found")
+			}
+			name := UserNameFlag
+			allowPub := AllowPubFlag
+			allowSub := AllowSubFlag
+			userJWT, _, err := helpers.CreateUser([]byte(OperatorSeedFlag), []byte(AccountSeedFlag), name, allowPub, allowSub)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", userJWT)
 			return nil
 		},
 	}
@@ -164,6 +187,29 @@ var (
 			return nil
 		},
 	}
+
+	mqUserPublicKeyCmd = &cobra.Command{
+		Use:   "user-public-key",
+		Short: "calculates the public-key for an user",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			if AccountSeedFlag == "" {
+				return errors.New("no value for parameter --account-seed found")
+			}
+			name := UserNameFlag
+			allowPub := AllowPubFlag
+			allowSub := AllowSubFlag
+			_, uSeed, err := helpers.CreateUser([]byte(OperatorSeedFlag), []byte(AccountSeedFlag), name, allowPub, allowSub)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", uSeed)
+			return nil
+		},
+	}
 )
 
 func init() {
@@ -172,12 +218,14 @@ func init() {
 	rootCmd.AddCommand(mqCreateSeedsCmd)
 	rootCmd.AddCommand(mqCreateOperatorJWTCmd)
 	rootCmd.AddCommand(mqCreateAccountJWTCmd)
+	rootCmd.AddCommand(mqCreateUserJWTCmd)
 
 	// mqCreateUserJWTCmd.PersistentFlags().StringArrayP()
 	mqCreateUserJWTCmd.PersistentFlags().StringVarP(&UserNameFlag, "user-name", "u", "", "name for the user")
 	mqCreateUserJWTCmd.PersistentFlags().StringArrayVarP(&AllowPubFlag, "allow-pub", "p", []string{}, "channels the user will be allowed to publish")
 	mqCreateUserJWTCmd.PersistentFlags().StringArrayVarP(&AllowSubFlag, "allow-sub", "s", []string{}, "channels the user will be allowed to subscribe")
-	rootCmd.AddCommand(mqCreateUserJWTCmd)
 	rootCmd.AddCommand(mqOperatorPublicKeyCmd)
 	rootCmd.AddCommand(mqAccountPublicKeyCmd)
+	rootCmd.AddCommand(mqCreateUserNkeyCmd)
+	rootCmd.AddCommand(mqUserPublicKeyCmd)
 }
