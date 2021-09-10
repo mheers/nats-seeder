@@ -1,4 +1,4 @@
-FROM golang:1.15rc1-alpine3.12 as builder
+FROM golang:1.17.1-alpine3.14 as builder
 
 RUN apk add --no-cache bash git
 
@@ -13,7 +13,7 @@ RUN [ "$(uname)" = Darwin ] && system=darwin || system=linux; \
     ./ci/go-build.sh --os ${system} --arch ${arch}
 
 # final stage
-FROM alpine:3.12
+FROM alpine:3.14
 WORKDIR /app
 COPY --from=builder /go/src/app/goapp /usr/local/bin/nats-seeder
 ENTRYPOINT ["/usr/local/bin/nats-seeder"]
