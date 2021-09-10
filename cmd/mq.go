@@ -218,14 +218,22 @@ func init() {
 	rootCmd.AddCommand(mqCreateSeedsCmd)
 	rootCmd.AddCommand(mqCreateOperatorJWTCmd)
 	rootCmd.AddCommand(mqCreateAccountJWTCmd)
-	rootCmd.AddCommand(mqCreateUserJWTCmd)
 
-	// mqCreateUserJWTCmd.PersistentFlags().StringArrayP()
 	mqCreateUserJWTCmd.PersistentFlags().StringVarP(&UserNameFlag, "user-name", "u", "", "name for the user")
 	mqCreateUserJWTCmd.PersistentFlags().StringArrayVarP(&AllowPubFlag, "allow-pub", "p", []string{}, "channels the user will be allowed to publish")
 	mqCreateUserJWTCmd.PersistentFlags().StringArrayVarP(&AllowSubFlag, "allow-sub", "s", []string{}, "channels the user will be allowed to subscribe")
+	rootCmd.AddCommand(mqCreateUserJWTCmd)
+
+	mqUserPublicKeyCmd.PersistentFlags().StringVarP(&UserNameFlag, "user-name", "u", "", "name for the user")
+	mqUserPublicKeyCmd.PersistentFlags().StringArrayVarP(&AllowPubFlag, "allow-pub", "p", []string{}, "channels the user will be allowed to publish")
+	mqUserPublicKeyCmd.PersistentFlags().StringArrayVarP(&AllowSubFlag, "allow-sub", "s", []string{}, "channels the user will be allowed to subscribe")
+	rootCmd.AddCommand(mqUserPublicKeyCmd)
+
+	mqCreateUserNkeyCmd.PersistentFlags().StringVarP(&UserNameFlag, "user-name", "u", "", "name for the user")
+	mqCreateUserNkeyCmd.PersistentFlags().StringArrayVarP(&AllowPubFlag, "allow-pub", "p", []string{}, "channels the user will be allowed to publish")
+	mqCreateUserNkeyCmd.PersistentFlags().StringArrayVarP(&AllowSubFlag, "allow-sub", "s", []string{}, "channels the user will be allowed to subscribe")
+	rootCmd.AddCommand(mqCreateUserNkeyCmd)
+
 	rootCmd.AddCommand(mqOperatorPublicKeyCmd)
 	rootCmd.AddCommand(mqAccountPublicKeyCmd)
-	rootCmd.AddCommand(mqCreateUserNkeyCmd)
-	rootCmd.AddCommand(mqUserPublicKeyCmd)
 }
