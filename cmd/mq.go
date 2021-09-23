@@ -11,6 +11,8 @@ import (
 var (
 	// OperatorSeedFlag used for setting the operator seed
 	OperatorSeedFlag string
+	// SysAccountSeedFlag used for setting the account seed
+	SysAccountSeedFlag string
 	// AccountSeedFlag used for setting the account seed
 	AccountSeedFlag string
 	// SeedFlag used for setting a seed
@@ -28,11 +30,15 @@ var (
 		Short: "creates seeds for the mq that can be directly added to the .env file",
 		Long:  ``,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			operator, account, err := helpers.Create()
+			operator, sysAccount, account, err := helpers.Create()
 			if err != nil {
 				return err
 			}
 			operatorSeed, err := operator.Seed()
+			if err != nil {
+				return err
+			}
+			sysAccountSeed, err := sysAccount.Seed()
 			if err != nil {
 				return err
 			}
@@ -41,6 +47,7 @@ var (
 				return err
 			}
 			fmt.Printf("OPERATOR_SEED=\"" + string(operatorSeed) + "\"\n")
+			fmt.Printf("SYSACCOUNT_SEED=\"" + string(sysAccountSeed) + "\"\n")
 			fmt.Printf("ACCOUNT_SEED=\"" + string(accountSeed) + "\"\n")
 			return nil
 		},
@@ -59,6 +66,30 @@ var (
 				return err
 			}
 			fmt.Printf("%s", operatorJWT)
+			return nil
+		},
+	}
+
+	mqCreateSysAccountJWTCmd = &cobra.Command{
+		Use:   "sys-account-jwt",
+		Short: "creates a jwt for an account",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			operatorKP, _, err := helpers.CreateOperator([]byte(OperatorSeedFlag))
+			if err != nil {
+				return err
+			}
+			if SysAccountSeedFlag == "" {
+				return errors.New("no value for parameter --sys-account-seed found")
+			}
+			_, accountJWT, err := helpers.CreateSysAccount([]byte(SysAccountSeedFlag), operatorKP)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", accountJWT)
 			return nil
 		},
 	}
@@ -160,6 +191,34 @@ var (
 		},
 	}
 
+	mqSysAccountPublicKeyCmd = &cobra.Command{
+		Use:   "sys-account-public-key",
+		Short: "calculates the public-key for an account",
+		Long:  ``,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if OperatorSeedFlag == "" {
+				return errors.New("no value for parameter --operator-seed found")
+			}
+			operatorKP, _, err := helpers.CreateOperator([]byte(OperatorSeedFlag))
+			if err != nil {
+				return err
+			}
+			if SysAccountSeedFlag == "" {
+				return errors.New("no value for parameter --sys-account-seed found")
+			}
+			accountKP, _, err := helpers.CreateSysAccount([]byte(SysAccountSeedFlag), operatorKP)
+			if err != nil {
+				return err
+			}
+			publicKey, err := accountKP.PublicKey()
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", publicKey)
+			return nil
+		},
+	}
+
 	mqAccountPublicKeyCmd = &cobra.Command{
 		Use:   "account-public-key",
 		Short: "calculates the public-key for an account",
@@ -214,9 +273,11 @@ var (
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&OperatorSeedFlag, "operator-seed", "o", "", "seed for the operator")
+	rootCmd.PersistentFlags().StringVarP(&SysAccountSeedFlag, "sys-account-seed", "b", "", "seed for the sys-account")
 	rootCmd.PersistentFlags().StringVarP(&AccountSeedFlag, "account-seed", "a", "", "seed for the account")
 	rootCmd.AddCommand(mqCreateSeedsCmd)
 	rootCmd.AddCommand(mqCreateOperatorJWTCmd)
+	rootCmd.AddCommand(mqCreateSysAccountJWTCmd)
 	rootCmd.AddCommand(mqCreateAccountJWTCmd)
 
 	mqCreateUserJWTCmd.PersistentFlags().StringVarP(&UserNameFlag, "user-name", "u", "", "name for the user")
@@ -235,5 +296,6 @@ func init() {
 	rootCmd.AddCommand(mqCreateUserNkeyCmd)
 
 	rootCmd.AddCommand(mqOperatorPublicKeyCmd)
+	rootCmd.AddCommand(mqSysAccountPublicKeyCmd)
 	rootCmd.AddCommand(mqAccountPublicKeyCmd)
 }

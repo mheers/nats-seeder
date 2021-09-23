@@ -3,7 +3,7 @@ module github.com/mheers/nats-seeder
 go 1.17
 
 require (
-	github.com/nats-io/jwt v1.2.2
+	github.com/nats-io/jwt/v2 v2.0.3
 	github.com/nats-io/nkeys v0.3.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.2.1

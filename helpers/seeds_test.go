@@ -3,15 +3,16 @@ package helpers
 import (
 	"testing"
 
-	"github.com/nats-io/jwt"
+	jwt "github.com/nats-io/jwt/v2"
 	"github.com/nats-io/nkeys"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_Create(t *testing.T) {
-	operator, account, err := Create()
+	operator, sysAccount, account, err := Create()
 	assert.Nil(t, err)
 	assert.NotNil(t, operator)
+	assert.NotNil(t, sysAccount)
 	assert.NotNil(t, account)
 }
 
@@ -28,9 +29,10 @@ func Test_createAccountSeed(t *testing.T) {
 }
 
 func Test_GetAccount(t *testing.T) {
-	operator, account, err := Create()
+	operator, sysAccount, account, err := Create()
 	assert.Nil(t, err)
 	assert.NotNil(t, operator)
+	assert.NotNil(t, sysAccount)
 	assert.NotNil(t, account)
 
 	oSeed, err := operator.Seed()
@@ -53,26 +55,33 @@ func TestNkeys(t *testing.T) {
 	oSeed, err := opSrc.Seed()
 	assert.Nil(t, err)
 	pkSrc, err := opSrc.PrivateKey()
+	assert.Nil(t, err)
 	pubkSrc, err := opSrc.PublicKey()
+	assert.Nil(t, err)
 	ocSrc := jwt.NewOperatorClaims(pubkSrc)
 	jwtSrc, err := ocSrc.Encode(opSrc)
+	assert.Nil(t, err)
 
 	opDest, err := nkeys.FromSeed(oSeed)
 	assert.Nil(t, err)
 	assert.NotNil(t, opDest)
 	pkDest, err := opDest.PrivateKey()
+	assert.Nil(t, err)
 	pubkDest, err := opDest.PublicKey()
+	assert.Nil(t, err)
 	ocDest := jwt.NewOperatorClaims(pubkDest)
 	jwtDest, err := ocDest.Encode(opDest)
+	assert.Nil(t, err)
 	assert.Equal(t, pkSrc, pkDest)
 	assert.Equal(t, pubkSrc, pubkDest)
 	assert.Equal(t, jwtSrc, jwtDest)
 }
 
 func TestCreateUser(t *testing.T) {
-	operator, account, err := Create()
+	operator, sysAccount, account, err := Create()
 	assert.Nil(t, err)
 	assert.NotNil(t, operator)
+	assert.NotNil(t, sysAccount)
 	assert.NotNil(t, account)
 
 	oSeed, err := operator.Seed()

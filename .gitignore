@@ -15,3 +15,5 @@
 # vendor/
 .VERSION
 nats-seeder
+
+*.creds
