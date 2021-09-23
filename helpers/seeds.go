@@ -128,19 +128,6 @@ func createAccountSeed() ([]byte, error) {
 	return aseed, nil
 }
 
-// GetAccount reconstructs an account (KeyPair) from the operator and account seeds
-func GetAccount(oSeed, aSeed []byte) (nkeys.KeyPair, error) {
-	operator, _, err := CreateOperator(oSeed)
-	if err != nil {
-		return nil, err
-	}
-	account, _, err := CreateAccount(aSeed, operator)
-	if err != nil {
-		return nil, err
-	}
-	return account, nil
-}
-
 // CreateUser creates a new user with specific permissions
 func CreateUser(oSeed, aSeed []byte, name string, allowPub, allowSub []string) (string, string, error) {
 	operator, _, err := CreateOperator(oSeed)
