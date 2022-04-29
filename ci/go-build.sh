@@ -78,5 +78,8 @@ FILE_EXTENSION=""
 if [[ ${OS} = "windows" ]]; then
   FILE_EXTENSION=".exe"
 fi
-GO111MODULE=on CGO_ENABLED=0 GOOS=${OS} GOARCH=${ARCH} go build -a -ldflags "$FLAG" -o goapp
+
+CGO_ENABLED=0
+GO111MODULE=on CGO_ENABLED=${CGO_ENABLED} GOOS=${OS} GOARCH=${ARCH} go build -a -ldflags "$FLAG" -o goapp
+
 echo -e "Done"

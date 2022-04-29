@@ -3,19 +3,14 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/mheers/nats-seeder/models"
 	"github.com/spf13/cobra"
 )
 
 // build flags
 var (
-	VERSION    string
-	BuildTime  string
-	CommitHash string
-	GoVersion  string
-	GitTag     string
-	GitBranch  string
+	RuntimeInfo *models.RuntimeInfo
 )
-
 var (
 	versionCmd = &cobra.Command{
 		Use:   "version",
@@ -28,10 +23,13 @@ var (
 )
 
 func printVersion() {
-	fmt.Printf("Version: %s\n", VERSION)
-	fmt.Printf("BildTime: %s\n", BuildTime)
-	fmt.Printf("CommitHash: %s\n", CommitHash)
-	fmt.Printf("GoVersion: %s\n", GoVersion)
-	fmt.Printf("GitTag: %s\n", GitTag)
-	fmt.Printf("GitBranch: %s\n", GitBranch)
+	fmt.Printf("\nRuntime Info:\n")
+	fmt.Printf("Version: %s\n", RuntimeInfo.Version)
+	fmt.Printf("BuildTime: %s\n", RuntimeInfo.BuildTime)
+	fmt.Printf("CommitHash: %s\n", RuntimeInfo.CommitHash)
+	fmt.Printf("CommitTime: %s\n", RuntimeInfo.CommitTime)
+	fmt.Printf("DirtyBuild: %t\n", RuntimeInfo.DirtyBuild)
+	fmt.Printf("GoVersion: %s\n", RuntimeInfo.GoVersion)
+	fmt.Printf("GitTag: %s\n", RuntimeInfo.GitTag)
+	fmt.Printf("GitBranch: %s\n", RuntimeInfo.GitBranch)
 }
