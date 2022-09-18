@@ -47,7 +47,7 @@ var (
 				return err
 			}
 			fmt.Printf("OPERATOR_SEED=\"" + string(operatorSeed) + "\"\n")
-			fmt.Printf("SYSACCOUNT_SEED=\"" + string(sysAccountSeed) + "\"\n")
+			fmt.Printf("SYS_ACCOUNT_SEED=\"" + string(sysAccountSeed) + "\"\n")
 			fmt.Printf("ACCOUNT_SEED=\"" + string(accountSeed) + "\"\n")
 			return nil
 		},
