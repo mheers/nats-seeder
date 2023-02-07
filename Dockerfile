@@ -1,5 +1,5 @@
-ARG go="golang:1.19.1-alpine"
-ARG base="alpine:3.16"
+ARG go="golang:1.20.0-alpine3.17"
+ARG base="alpine:3.17"
 
 FROM --platform=$BUILDPLATFORM ${go} AS builder
 
