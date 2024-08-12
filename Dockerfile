@@ -18,9 +18,13 @@ ADD . ./
 RUN [ "$(uname)" = Darwin ] && system=darwin || system=linux; \
     ./ci/go-build.sh --os ${system} --arch $(echo $TARGETPLATFORM  | cut -d/ -f2)
 
+# install nats cli
+RUN go install github.com/nats-io/natscli/nats@latest
+
 # final stage
 FROM ${base}
 WORKDIR /app
 COPY --from=builder /go/src/app/goapp /usr/local/bin/nats-seeder
+COPY --from=builder /go/bin/nats /usr/local/bin/nats
 ENTRYPOINT ["/usr/local/bin/nats-seeder"]
 CMD ["help"]
