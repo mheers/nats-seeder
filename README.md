@@ -9,6 +9,16 @@ docker build -t mheers/nats-seeder .
 docker push mheers/nats-seeder
 ```
 
+or locally
+
+```bash
+make install
+
+go install .
+echo /Users/apple/workspace/go/bin/nats-seeder
+/Users/apple/workspace/go/bin/nats-seeder
+```
+
 ## Usage
 
 ### Seeds
