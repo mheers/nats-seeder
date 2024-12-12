@@ -1,13 +1,13 @@
 module github.com/mheers/nats-seeder
 
-go 1.22
+go 1.23
 
 require (
-	github.com/nats-io/jwt/v2 v2.5.8
-	github.com/nats-io/nkeys v0.4.7
+	github.com/nats-io/jwt/v2 v2.7.2
+	github.com/nats-io/nkeys v0.4.8
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
