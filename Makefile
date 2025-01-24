@@ -6,6 +6,14 @@ SHELL := /bin/bash
 
 all: help
 
+##@ Installing
+install: ##  Installs the application
+	go install .
+	
+	echo $(shell command -v nats-seeder)
+install-del: ##  Deletes the application
+	rm -f $(shell command -v nats-seeder)
+
 ##@ Building
 build: docker ##  Builds the application (same as 'docker')
 

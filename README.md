@@ -9,6 +9,16 @@ docker build -t mheers/nats-seeder .
 docker push mheers/nats-seeder
 ```
 
+or locally
+
+```bash
+make install
+
+go install .
+echo /Users/apple/workspace/go/bin/nats-seeder
+/Users/apple/workspace/go/bin/nats-seeder
+```
+
 ## Usage
 
 ### Seeds
@@ -30,7 +40,7 @@ ACCOUNT_SEED="SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE"
 Create the public key:
 
 ```bash
-nast-seeder operator-public-key \
+nats-seeder operator-public-key \
     --operator-seed SOAON2QVZ5L7CMOO5W3PV4F7OCDU7L6AXIO5VA2YWIBTTSLUN64UNOU63M \
     --sys-account-seed SAABOFAWXZYMP3LWVULJTFD25YDFA5UEJ4FRIELRRIHQNMSQFDWKLNXS5E \
     --account-seed SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE
@@ -41,7 +51,7 @@ gives `ODDCMHMPYKIACJP7WJ5WUBPZFHMW4MADOOUDLNTXX6LJZDYHO5EQELFD`
 Create the jwt:
 
 ```bash
-nast-seeder operator-jwt \
+nats-seeder operator-jwt \
     --operator-seed SOAON2QVZ5L7CMOO5W3PV4F7OCDU7L6AXIO5VA2YWIBTTSLUN64UNOU63M \
     --sys-account-seed SAABOFAWXZYMP3LWVULJTFD25YDFA5UEJ4FRIELRRIHQNMSQFDWKLNXS5E \
     --account-seed SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE
@@ -54,7 +64,7 @@ gives `eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJVWFBOUUdXTjZFV1
 Create the public key:
 
 ```bash
-nast-seeder sys-account-public-key \
+nats-seeder sys-account-public-key \
     --operator-seed SOAON2QVZ5L7CMOO5W3PV4F7OCDU7L6AXIO5VA2YWIBTTSLUN64UNOU63M \
     --sys-account-seed SAABOFAWXZYMP3LWVULJTFD25YDFA5UEJ4FRIELRRIHQNMSQFDWKLNXS5E \
     --account-seed SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE
@@ -65,7 +75,7 @@ gives `ADPF746QXTAOIJMMCC6MPCROLETNI2GDR7RDKWG3WOY6UOVG6O4JQV2Q`
 Create the jwt:
 
 ```bash
-nast-seeder sys-account-jwt \
+nats-seeder sys-account-jwt \
     --operator-seed SOAON2QVZ5L7CMOO5W3PV4F7OCDU7L6AXIO5VA2YWIBTTSLUN64UNOU63M \
     --sys-account-seed SAABOFAWXZYMP3LWVULJTFD25YDFA5UEJ4FRIELRRIHQNMSQFDWKLNXS5E \
     --account-seed SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE
@@ -78,7 +88,7 @@ gives `eyJ0eXAiOiJKV1QiLCJhbGciOiJlZDI1NTE5LW5rZXkifQ.eyJqdGkiOiJGSFFWVU5NWjU2UF
 Create the public key:
 
 ```bash
-nast-seeder account-public-key \
+nats-seeder account-public-key \
     --operator-seed SOAON2QVZ5L7CMOO5W3PV4F7OCDU7L6AXIO5VA2YWIBTTSLUN64UNOU63M \
     --sys-account-seed SAABOFAWXZYMP3LWVULJTFD25YDFA5UEJ4FRIELRRIHQNMSQFDWKLNXS5E \
     --account-seed SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE
@@ -89,7 +99,7 @@ gives `ADCCABGKVTMJWVLCXAYMXPNTNFW4WUQAD2BVJEWJ36Y2GS4Y3VOVLO65`
 Create the jwt:
 
 ```bash
-nast-seeder account-jwt \
+nats-seeder account-jwt \
     --operator-seed SOAON2QVZ5L7CMOO5W3PV4F7OCDU7L6AXIO5VA2YWIBTTSLUN64UNOU63M \
     --sys-account-seed SAABOFAWXZYMP3LWVULJTFD25YDFA5UEJ4FRIELRRIHQNMSQFDWKLNXS5E \
     --account-seed SAADBIEN2MTECGRQDK3Y6XHK7PADDSXR6SOCQOM5GFORHLBAX6V6C65OOE
